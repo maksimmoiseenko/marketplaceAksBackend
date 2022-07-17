@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import pro.dayx.aks.models.AddressEntity;
 import pro.dayx.aks.models.OrderEntity;
 import pro.dayx.aks.models.SuggestionEntity;
 import lombok.*;
@@ -36,11 +37,15 @@ public class UserEntity implements UserDetails {
 	private String role;
 	@Column(nullable = false)
 	private String password;
+	// for suppliers
 	@OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<SuggestionEntity> suggestionEntities = new ArrayList<>();
+	// for clients
 	@OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderEntity> orderEntities = new ArrayList<>();
-
+	// for clients
+	@OneToMany(mappedBy = "client",cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<AddressEntity> addressEntities = new ArrayList<>();
 	public UserEntity(String email, String password) {
 		this.email = email;
 		this.password = password;

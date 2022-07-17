@@ -37,4 +37,7 @@ public class SuggestionController {
     public void deleteSuggestion(@PathVariable Long id){
         suggestionService.deleteSuggestion(id);
     }
+
+    @GetMapping("/suggestion/{id}")
+    public ResponseEntity<?> getSuggestion(@PathVariable Long id) {return suggestionService.getSuggestion(id);}
 }

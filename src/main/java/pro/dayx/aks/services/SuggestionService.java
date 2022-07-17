@@ -73,4 +73,10 @@ public class SuggestionService {
         SuggestionEntity suggestionEntity = new SuggestionEntity(userEntity, menuObjectEntity,suggestionRequest.getPrice(), suggestionRequest.getCurrency(), suggestionRequest.getPresence(), suggestionRequest.getUnit(), suggestionRequest.getDescription(), suggestionRequest.getAmountOfDays(), suggestionRequest.getLeft());
         return ResponseEntity.ok().body(suggestionRepository.save(suggestionEntity));
     }
+
+    public ResponseEntity<?> getSuggestion(Long id) {
+        Optional<SuggestionEntity> suggestionOptional = this.suggestionRepository.findById(id);
+        if(suggestionOptional.isPresent()) return ResponseEntity.ok(suggestionOptional.get().toString());
+        else return ResponseEntity.badRequest().body("Suggestion is not found");
+    }
 }
