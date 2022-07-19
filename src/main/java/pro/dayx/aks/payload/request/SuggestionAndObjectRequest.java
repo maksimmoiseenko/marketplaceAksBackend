@@ -6,10 +6,10 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class SuggestionAndObjectRequest {
     private Double price;
-    private String description;
+    private String descriptionObject;
+    private String descriptionSuggestion;
     private Integer amountOfDays;
     private String category;
     private String currency;
@@ -32,10 +32,14 @@ public class SuggestionAndObjectRequest {
                 ",\"amountOfDays\":" + amountOfDays +
                 ",\"left\":" + left + "}"
                 ;
-        if(description == null)
-            string+=(",\"description\":" + description);
+        if(descriptionObject == null)
+            string+=(",\"descriptionObject\":" + descriptionObject);
         else
-            string+=(",\"description\":\"" + description + "\"");
+            string+=(",\"descriptionObject\":\"" + descriptionObject + "\"");
+        if(descriptionSuggestion == null)
+            string+=(",\"descriptionSuggestion\":" + descriptionSuggestion);
+        else
+            string+=(",\"descriptionSuggestion\":\"" + descriptionSuggestion + "\"");
         return string;
     }
 }

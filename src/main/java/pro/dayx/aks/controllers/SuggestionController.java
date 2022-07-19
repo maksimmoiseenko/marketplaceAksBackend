@@ -21,7 +21,7 @@ public class SuggestionController {
     }
     @PostMapping("/object/{objectId}/suggestion")
     public ResponseEntity<?> addSuggestion(@PathVariable int objectId, @RequestBody SuggestionRequest suggestionRequest, @AuthenticationPrincipal UserDetails userDetails){
-        return suggestionService.addSuggestion(userDetails, objectId, suggestionRequest.getPrice());
+        return suggestionService.addSuggestion(userDetails, objectId, suggestionRequest);
     }
     @PostMapping("/suggestion")
     public ResponseEntity<?> addSuggestionAndObject(@RequestBody SuggestionAndObjectRequest suggestionRequest, @AuthenticationPrincipal UserDetails userDetails){

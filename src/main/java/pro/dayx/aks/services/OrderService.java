@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -31,10 +33,6 @@ public class OrderService {
         this.addressRepository = addressRepository;
     }
 
-    public ResponseEntity<?> getOrdersByUserId(Long id){
-        System.out.println(this.orderRepository.findAllByUserEntityId(id).toString());
-        return ResponseEntity.ok(this.orderRepository.findAllByUserEntityId(id).toString());
-    }
 
     public void deleteById(Long orderId) {
         this.orderRepository.deleteById(orderId);
@@ -69,8 +67,23 @@ public class OrderService {
     }
 
     public ResponseEntity<?> getAllOrders() {
-        String string =  this.orderRepository.findAll().toString();
-        System.out.println(string);
-        return ResponseEntity.ok(string);
+        return ResponseEntity.ok(this.orderRepository.findAll().toString());
+    }
+
+    public ResponseEntity<?> getAllSupplierOrders(Long id, UserDetails userDetails) {
+        Optional<UserEntity> userOptional = this.userRepository.findByEmail(userDetails.getUsername());
+        if(userOptional.isPresent())
+            if(id.equals(userOptional.get().getId()) || userOptional.get().getRole().equals("ROLE_ADMIN"))
+                return ResponseEntity.ok(this.orderRepository.findAll().stream().filter(order -> order.getSuggestionEntity().getUserEntity().getId().equals(id)).collect(Collectors.toList()).toString());
+            return ResponseEntity.badRequest().body("Error");
+    }
+
+    public ResponseEntity<?> getAllClientOrders(Long clientId, UserDetails userDetails) {
+        Optional<UserEntity> userOptional = this.userRepository.findByEmail(userDetails.getUsername());
+        if(userOptional.isPresent())
+            if(clientId.equals(userOptional.get().getId()) || userOptional.get().getRole().equals("ROLE_ADMIN"))
+                return ResponseEntity.ok(this.orderRepository.findAllByUserEntityId(clientId).toString());
+        return ResponseEntity.badRequest().body("Error");
+
     }
 }

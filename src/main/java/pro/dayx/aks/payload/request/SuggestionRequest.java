@@ -10,4 +10,10 @@ import lombok.*;
 public class SuggestionRequest {
     private Double price;
     private String description;
+    private Integer amountOfDays;
+    private String currency;
+    private Integer left;
+    private String presence;
+    private String unit;
+    //private String description;
 }

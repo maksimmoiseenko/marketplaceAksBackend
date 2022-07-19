@@ -4,6 +4,7 @@ import pro.dayx.aks.models.MenuObjectEntity;
 import pro.dayx.aks.models.MenuTypeEntity;
 import pro.dayx.aks.models.SuggestionEntity;
 import pro.dayx.aks.payload.request.SuggestionAndObjectRequest;
+import pro.dayx.aks.payload.request.SuggestionRequest;
 import pro.dayx.aks.payload.response.MessageResponse;
 import pro.dayx.aks.repository.MenuObjectRepository;
 import pro.dayx.aks.repository.MenuTypeRepository;
@@ -36,7 +37,7 @@ public class SuggestionService {
         this.menuTypeRepository = menuTypeRepository;
     }
 
-    public ResponseEntity<?> addSuggestion(UserDetails userDetails, Integer menuObjectId, Double price){
+    public ResponseEntity<?> addSuggestion(UserDetails userDetails, Integer menuObjectId, SuggestionRequest suggestionRequest){
         Optional<MenuObjectEntity> menuObjectEntity = menuObjectRepository.findById(menuObjectId);
         UserEntity userEntity = userRepository.findByEmail(userDetails.getUsername()).get();
         if(!userEntity.getRole().equals("ROLE_SUPPLIER"))
@@ -45,7 +46,13 @@ public class SuggestionService {
             SuggestionEntity suggestionEntity = new SuggestionEntity();
             suggestionEntity.setUserEntity(userEntity);
             suggestionEntity.setMenuObjectEntity(menuObjectEntity.get());
-            suggestionEntity.setPrice(price);
+            suggestionEntity.setPrice(suggestionRequest.getPrice());
+            suggestionEntity.setCurrency(suggestionRequest.getCurrency());
+            suggestionEntity.setAmountOfDays(suggestionRequest.getAmountOfDays());
+            suggestionEntity.setLeft(suggestionRequest.getLeft());
+            suggestionEntity.setDescription(suggestionRequest.getDescription());
+            suggestionEntity.setPresence(suggestionRequest.getPresence());
+            suggestionEntity.setUnit(suggestionRequest.getUnit());
             logger.info("suggestion is added");
             return ResponseEntity.ok(suggestionRepository.save(suggestionEntity));
         }
@@ -69,9 +76,9 @@ public class SuggestionService {
         if(!menuTypeEntity.isPresent()){
             return ResponseEntity.badRequest().body(new MessageResponse("MenuTypeEntity is now found"));
         }
-        MenuObjectEntity menuObjectEntity = menuObjectRepository.save(new MenuObjectEntity(menuTypeEntity.get(), suggestionRequest.getName(), suggestionRequest.getDescription(), suggestionRequest.getMerchandiseOrService()));
-        SuggestionEntity suggestionEntity = new SuggestionEntity(userEntity, menuObjectEntity,suggestionRequest.getPrice(), suggestionRequest.getCurrency(), suggestionRequest.getPresence(), suggestionRequest.getUnit(), suggestionRequest.getDescription(), suggestionRequest.getAmountOfDays(), suggestionRequest.getLeft());
-        return ResponseEntity.ok().body(suggestionRepository.save(suggestionEntity));
+        MenuObjectEntity menuObjectEntity = menuObjectRepository.save(new MenuObjectEntity(menuTypeEntity.get(), suggestionRequest.getName(), suggestionRequest.getDescriptionObject(), suggestionRequest.getMerchandiseOrService()));
+        SuggestionEntity suggestionEntity = new SuggestionEntity(userEntity, menuObjectEntity,suggestionRequest.getPrice(), suggestionRequest.getCurrency(), suggestionRequest.getPresence(), suggestionRequest.getUnit(), suggestionRequest.getDescriptionSuggestion(), suggestionRequest.getAmountOfDays(), suggestionRequest.getLeft());
+        return ResponseEntity.ok().body(suggestionRepository.save(suggestionEntity).toString());
     }
 
     public ResponseEntity<?> getSuggestion(Long id) {

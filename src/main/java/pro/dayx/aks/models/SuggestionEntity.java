@@ -53,7 +53,8 @@ public class SuggestionEntity {
                 "\", \"presence\":\"" + presence +
                 "\", \"unit\":\"" + unit +
                 "\",\"amountOfDays\":" + amountOfDays +
-                ",\"left\":" + left +
+                ",\"description\":\"" + description +
+                "\",\"left\":" + left +
                 '}';
     }
 

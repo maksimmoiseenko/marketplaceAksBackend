@@ -5,6 +5,7 @@ import pro.dayx.aks.models.AddressEntity;
 import pro.dayx.aks.models.OrderEntity;
 import pro.dayx.aks.payload.request.AddressRequest;
 import pro.dayx.aks.payload.request.OrderRequest;
+import pro.dayx.aks.security.services.UserEntity;
 import pro.dayx.aks.services.AddressService;
 import pro.dayx.aks.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,7 @@ public class OrderController {
         this.orderService = orderService;
         this.addressService = addressService;
     }
-    @GetMapping("user/{userId}/orders")
-    public ResponseEntity<?> getOrdersByUserId(@PathVariable Long userId){
-        return orderService.getOrdersByUserId(userId);
-    }
+
     @DeleteMapping("order/{orderId}")
     public void deleteOrder(@PathVariable Long orderId){
         orderService.deleteById(orderId);
@@ -50,5 +48,15 @@ public class OrderController {
     @GetMapping("orders")
     public ResponseEntity<?> getAllOrders(){
         return this.orderService.getAllOrders();
+    }
+    @Secured({"ROLE_CLIENT","ROLE_ADMIN"})
+    @GetMapping("orders/client/{clientId}")
+    public ResponseEntity<?> getAllClientOrders(@PathVariable Long clientId, @AuthenticationPrincipal UserDetails userDetails){
+        return this.orderService.getAllClientOrders(clientId, userDetails);
+    }
+    @Secured({"ROLE_SUPPLIER","ROLE_ADMIN"})
+    @GetMapping("orders/supplier/{supplierId}")
+    public ResponseEntity<?> getAllSupplierOrders(@PathVariable Long supplierId, @AuthenticationPrincipal UserDetails userDetails){
+        return this.orderService.getAllSupplierOrders(supplierId, userDetails);
     }
 }

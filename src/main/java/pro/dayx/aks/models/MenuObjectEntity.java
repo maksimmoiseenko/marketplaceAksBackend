@@ -29,6 +29,7 @@ public class MenuObjectEntity {
     private String name;
     @Column(name = "description")
     private String description;
+    private String image_url;
     @Column
     private String merchandiseOrService;
 
@@ -49,6 +50,8 @@ public class MenuObjectEntity {
                 ", \"name\":\"" + name + "\"" +
                 ", \"description\":\"" + description + "\"" +
                 ", \"merchandiseOrService\":\"" + merchandiseOrService + "\"" +
+                ", \"image_url\":\"" + image_url + "\"" +
+                ", \"suggestionsAmount\":" + this.suggestionEntities.size() +
                 '}';
     }
 
